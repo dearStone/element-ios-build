@@ -1,0 +1,113 @@
+name: Build Element IPA
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_mode:
+        description: '构建模式: simulator=编译验证(无需签名), adhoc=签名真机ipa(需要签名材料)'
+        type: choice
+        default: 'simulator'
+        options:
+          - simulator
+          - adhoc
+
+permissions: {}
+
+env:
+  MX_GIT_BRANCH: ${{ github.ref_name }}
+
+jobs:
+  build:
+    name: Build (${{ inputs.build_mode || 'simulator' }})
+    runs-on: macos-26
+
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          submodules: 'true'
+          persist-credentials: false
+
+      # Cache CocoaPods libraries
+      - name: Cache CocoaPods libraries
+        uses: actions/cache@v5.0.3
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Cache Ruby gems
+        uses: actions/cache@v5.0.3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      # Make sure we use the latest version of MatrixSDK
+      - name: Reset MatrixSDK pod
+        run: rm -rf Pods/MatrixSDK
+
+      - name: Brew bundle
+        run: brew bundle
+
+      - name: Bundle install
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      # Apply custom team id into xcconfig before xcodegen runs (xcconfig is read by xcodegen)
+      - name: Apply development team
+        if: inputs.build_mode == 'adhoc'
+        run: |
+          sed -i "s|^DEVELOPMENT_TEAM = .*|DEVELOPMENT_TEAM = ${{ secrets.APPLE_TEAM_ID }}|" Config/AppIdentifiers.xcconfig
+          grep "^DEVELOPMENT_TEAM" Config/AppIdentifiers.xcconfig
+
+      # fastlane auto-loads fastlane/.env (but not .env.default); provide it like the official alpha flow does
+      - name: Prepare fastlane env
+        run: cp fastlane/.env.default fastlane/.env
+
+      # ---- Simulator build (compile verification, no signing required) ----
+      - name: Build simulator
+        if: inputs.build_mode == 'simulator'
+        run: bundle exec fastlane build
+
+      # ---- Ad-hoc ipa build (signed) ----
+      - name: Import signing certificate
+        if: inputs.build_mode == 'adhoc'
+        uses: apple-actions/import-codesign-certs@v6.0.0
+        with:
+          p12-file-base64: ${{ secrets.IOS_P12_BASE64 }}
+          p12-password: ${{ secrets.IOS_P12_PASSWORD }}
+
+      - name: Build ad-hoc ipa
+        if: inputs.build_mode == 'adhoc'
+        run: bundle exec fastlane adhoc
+        env:
+          APPSTORECONNECT_KEY_ID: ${{ secrets.APPSTORECONNECT_KEY_ID }}
+          APPSTORECONNECT_KEY_ISSUER_ID: ${{ secrets.APPSTORECONNECT_KEY_ISSUER_ID }}
+          APPSTORECONNECT_KEY_CONTENT: ${{ secrets.APPSTORECONNECT_KEY_CONTENT }}
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # Custom bundle identifiers (official im.vector.app ids are taken)
+          MAIN_BUNDLE_ID: com.xieqinxian.element
+          SHARE_EXTENSION_BUNDLE_ID: com.xieqinxian.element.shareExtension
+          SIRI_INTENTS_EXTENSION_BUNDLE_ID: com.xieqinxian.element.SiriIntents
+          NSE_BUNDLE_ID: com.xieqinxian.element.nse
+          BROADCAST_UPLOAD_EXTENSION_BUNDLE_ID: com.xieqinxian.element.broadcastUploadExtension
+          # Ad-hoc provisioning profile names (must exist in Apple Developer portal)
+          ADHOC_MAIN_PROVISIONING_PROFILE_SPECIFIER: Xie Element Main AdHoc
+          ADHOC_SHARE_EXTENSION_PROVISIONING_PROFILE_SPECIFIER: Xie Element ShareExt AdHoc
+          ADHOC_SIRI_INTENTS_EXTENSION_PROVISIONING_PROFILE_SPECIFIER: Xie Element SiriIntents AdHoc
+          ADHOC_NSE_PROVISIONING_PROFILE_SPECIFIER: Xie Element NSE AdHoc
+          ADHOC_BROADCAST_UPLOAD_EXTENSION_PROVISIONING_PROFILE_SPECIFIER: Xie Element Broadcast AdHoc
+          # Certificate identity (must match the imported p12)
+          APPSTORE_CODESIGNING_IDENTITY: ${{ secrets.IOS_CODESIGNING_IDENTITY }}
+
+      - name: Upload ipa artifact
+        if: inputs.build_mode == 'adhoc'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Element-ipa
+          path: out/Riot.ipa
+          if-no-files-found: error
+          retention-days: 30
