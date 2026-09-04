@@ -48,8 +48,13 @@ jobs:
       - name: Reset MatrixSDK pod
         run: rm -rf Pods/MatrixSDK
 
-      - name: Brew bundle
-        run: brew bundle
+      # Install build tools (mint needed by official tooling; sentry-cli tap is untrusted on new Homebrew and not needed here)
+      - name: Brew tools
+        run: |
+          brew install mint xcodegen 2>&1 | tail -3 || true
+          which xcodegen || brew install xcodegen
+          which mint || brew install mint
+          which pod || brew install cocoapods
 
       - name: Bundle install
         run: |
