@@ -62,10 +62,11 @@ jobs:
           bundle install --jobs 4 --retry 3
 
       # Apply custom team id into xcconfig before xcodegen runs (xcconfig is read by xcodegen)
+      # Note: macOS ships BSD sed (no GNU -i syntax); use perl for portability
       - name: Apply development team
         if: inputs.build_mode == 'adhoc'
         run: |
-          sed -i "s|^DEVELOPMENT_TEAM = .*|DEVELOPMENT_TEAM = ${{ secrets.APPLE_TEAM_ID }}|" Config/AppIdentifiers.xcconfig
+          perl -pi -e "s/^DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = ${{ secrets.APPLE_TEAM_ID }}/" Config/AppIdentifiers.xcconfig
           grep "^DEVELOPMENT_TEAM" Config/AppIdentifiers.xcconfig
 
       # fastlane auto-loads fastlane/.env (but not .env.default); provide it like the official alpha flow does
