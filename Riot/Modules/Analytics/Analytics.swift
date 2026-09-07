@@ -341,6 +341,11 @@ extension Analytics: MXAnalyticsDelegate {
         capture(event: event)
     }
     
+    func startDurationTracking(forName name: String, operation: String) -> StopDurationTracking {
+        // Sentry monitoring was removed for the self-hosted build; no-op to satisfy the protocol.
+        return { }
+    }
+    
     func trackCallStarted(withVideo isVideo: Bool, numberOfParticipants: Int, incoming isIncoming: Bool) {
         let event = AnalyticsEvent.CallStarted(isVideo: isVideo, numParticipants: numberOfParticipants, placed: !isIncoming)
         capture(event: event)
@@ -388,6 +393,10 @@ extension Analytics: MXAnalyticsDelegate {
                                             messageType: .Text,
                                             startsThread: startsThread)
         capture(event: event)
+    }
+
+    func trackNonFatalIssue(_ issue: String, details: [String: Any]?) {
+        // Sentry monitoring was removed for the self-hosted build; no-op to satisfy the protocol.
     }
 }
 
