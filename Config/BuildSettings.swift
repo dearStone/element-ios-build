@@ -224,10 +224,12 @@ final class BuildSettings: NSObject {
     // MARK: - Features
     
     /// Setting to force protection by pin code
-    static let forcePinProtection: Bool = false
+    /// Coconut: PIN setup is forced right after login (cancel is hidden).
+    static let forcePinProtection: Bool = true
     
     /// Max allowed time to continue using the app without prompting PIN
-    static let pinCodeGraceTimeInSeconds: TimeInterval = 0
+    /// Coconut: 1 minute of background time is allowed before the PIN is requested again.
+    static let pinCodeGraceTimeInSeconds: TimeInterval = 60
     
     /// Force non-jailbroken app usage
     static let forceNonJailbrokenUsage: Bool = true
@@ -259,7 +261,8 @@ final class BuildSettings: NSObject {
     static let maxAllowedNumberOfBiometricsFailures: Int = 5
     
     /// Indicates should the app log out the user when number of PIN failures reaches `maxAllowedNumberOfPinFailures`. Defaults to `false`
-    static let logOutUserWhenPINFailuresExceeded: Bool = false
+    /// Coconut: three wrong PINs log the user out (biometrics failures never do).
+    static let logOutUserWhenPINFailuresExceeded: Bool = true
     
     /// Indicates should the app log out the user when number of biometrics failures reaches `maxAllowedNumberOfBiometricsFailures`. Defaults to `false`
     static let logOutUserWhenBiometricsFailuresExceeded: Bool = false
