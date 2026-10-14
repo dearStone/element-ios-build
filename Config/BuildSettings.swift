@@ -95,7 +95,7 @@ final class BuildSettings: NSObject {
 
     /// Default server proposed on the authentication screen
     static var serverConfigDefaultHomeserverUrlString: String {
-        MDMSettings.serverConfigDefaultHomeserverUrlString ?? "https://xieqinxian.com"
+        MDMSettings.serverConfigDefaultHomeserverUrlString ?? "https://matrix.org"
     }
     
     /// Default identity server
