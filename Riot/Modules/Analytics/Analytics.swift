@@ -27,9 +27,6 @@ import AnalyticsEvents
     /// The analytics client to send events with.
     private var client: AnalyticsClientProtocol = PostHogAnalyticsClient.shared
     
-    /// The monitoring client to track crashes, issues and performance
-    private var monitoringClient = SentryMonitoringClient()
-    
     /// The service used to interact with account data settings.
     private var service: AnalyticsService?
     
@@ -97,7 +94,6 @@ import AnalyticsEvents
         // The order is important here. PostHog ignores the reset if stopped.
         reset()
         client.stop()
-        monitoringClient.stop()
         
         MXLog.debug("[Analytics] Stopped.")
     }
@@ -107,7 +103,6 @@ import AnalyticsEvents
         guard RiotSettings.shared.enableAnalytics, !isRunning else { return }
         
         client.start()
-        monitoringClient.start()
         
         // Sanity check in case something went wrong.
         guard client.isRunning else { return }
@@ -163,7 +158,6 @@ import AnalyticsEvents
     /// Note: **MUST** be called before stopping PostHog or the reset is ignored.
     func reset() {
         client.reset()
-        monitoringClient.reset()
         MXLog.debug("[Analytics] Reset.")
         RiotSettings.shared.isIdentifiedForAnalytics = false
         
@@ -348,7 +342,8 @@ extension Analytics: MXAnalyticsDelegate {
     }
     
     func startDurationTracking(forName name: String, operation: String) -> StopDurationTracking {
-        return monitoringClient.startPerformanceTracking(name: name, operation: operation)
+        // Sentry monitoring was removed for the self-hosted build; no-op to satisfy the protocol.
+        return { }
     }
     
     func trackCallStarted(withVideo isVideo: Bool, numberOfParticipants: Int, incoming isIncoming: Bool) {
@@ -401,7 +396,7 @@ extension Analytics: MXAnalyticsDelegate {
     }
 
     func trackNonFatalIssue(_ issue: String, details: [String: Any]?) {
-        monitoringClient.trackNonFatalIssue(issue, details: details)
+        // Sentry monitoring was removed for the self-hosted build; no-op to satisfy the protocol.
     }
 }
 

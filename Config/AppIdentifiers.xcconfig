@@ -16,9 +16,9 @@
 
 
 // App identity
-BUNDLE_DISPLAY_NAME = Element Classic
-BASE_BUNDLE_IDENTIFIER = im.vector.app
-APPLICATION_GROUP_IDENTIFIER = group.im.vector
+BUNDLE_DISPLAY_NAME = Coconut
+BASE_BUNDLE_IDENTIFIER = com.xieqinxian.element
+APPLICATION_GROUP_IDENTIFIER = group.com.xieqinxian.element
 APPLICATION_SCHEME = element
 
 // Team
