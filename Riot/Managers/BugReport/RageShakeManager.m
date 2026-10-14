@@ -100,8 +100,9 @@ static RageShakeManager* sharedInstance = nil;
 - (void)startShaking:(UIResponder*)responder {
     
     // Start only if the application is in foreground
-    // And if the rageshake user setting is enabled
+    // And if the rageshake user setting is enabled (Coconut: globally disabled)
     if ([AppDelegate theDelegate].isAppForeground
+        && BuildSettings.bugReportingEnabled
         && RiotSettings.shared.enableRageShake
         && !confirmationAlert)
     {

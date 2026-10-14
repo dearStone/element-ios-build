@@ -14,10 +14,9 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleAspectFit" placeholderIntrinsicWidth="130" placeholderIntrinsicHeight="130" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3KG-IR-FPV" customClass="ElementView" customModule="Element" customModuleProvider="target">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="coconut_logo" translatesAutoresizingMaskIntoConstraints="NO" id="3KG-IR-FPV">
                     <rect key="frame" x="95" y="219" width="130" height="130"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                </view>
+                </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="hme-ss-nFP">
                     <rect key="frame" x="20" y="472" width="280" height="36"/>
                     <subviews>
@@ -55,12 +54,8 @@
             <point key="canvasLocation" x="136.875" y="132.5"/>
         </view>
     </objects>
-    <designables>
-        <designable name="3KG-IR-FPV">
-            <size key="intrinsicContentSize" width="130" height="130"/>
-        </designable>
-    </designables>
     <resources>
+        <image name="coconut_logo" width="130" height="130"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

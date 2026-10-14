@@ -10,6 +10,11 @@ import Foundation
 extension UIApplication {
     @objc func vc_open(_ url: URL, completionHandler completion: ((_ success: Bool) -> Void)? = nil) {
         
+        // Coconut: links to the Element/Matrix public ecosystem are silently ignored.
+        guard !CoconutLinkPolicy.isBlocked(url) else {
+            return
+        }
+        
         let application = UIApplication.shared
         
         guard application.canOpenURL(url) else {

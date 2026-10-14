@@ -203,7 +203,9 @@ final class SideMenuCoordinator: NSObject, SideMenuCoordinatorType {
     }
     
     private func showHelp() {
-        guard let helpURL = URL(string: BuildSettings.applicationHelpUrlString) else {
+        // Coconut: links to the Element/Matrix public ecosystem are silently ignored.
+        guard let helpURL = URL(string: BuildSettings.applicationHelpUrlString),
+              !CoconutLinkPolicy.isBlocked(helpURL) else {
             return
         }
         

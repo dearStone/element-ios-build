@@ -2869,6 +2869,9 @@ SSOAuthenticationPresenterDelegate>
         {
             if (row == ABOUT_COPYRIGHT_INDEX)
             {
+                // Coconut: silently ignore this link when it points at the Element/Matrix public ecosystem.
+                if ([CoconutLinkPolicy isBlockedURLString:BuildSettings.applicationCopyrightUrlString]) { return; }
+                
                 WebViewViewController *webViewViewController = [[WebViewViewController alloc] initWithURL:BuildSettings.applicationCopyrightUrlString];
                 
                 webViewViewController.title = [VectorL10n settingsCopyright];
@@ -2878,6 +2881,9 @@ SSOAuthenticationPresenterDelegate>
             }
             else if (row == ABOUT_ACCEPTABLE_USE_INDEX)
             {
+                // Coconut: silently ignore this link when it points at the Element/Matrix public ecosystem.
+                if ([CoconutLinkPolicy isBlockedURLString:BuildSettings.applicationAcceptableUsePolicyUrlString]) { return; }
+                
                 WebViewViewController *webViewViewController = [[WebViewViewController alloc] initWithURL:BuildSettings.applicationAcceptableUsePolicyUrlString];
                 
                 webViewViewController.title = [VectorL10n settingsAcceptableUse];
@@ -2887,6 +2893,9 @@ SSOAuthenticationPresenterDelegate>
             }
             else if (row == ABOUT_PRIVACY_INDEX)
             {
+                // Coconut: silently ignore this link when it points at the Element/Matrix public ecosystem.
+                if ([CoconutLinkPolicy isBlockedURLString:BuildSettings.applicationPrivacyPolicyUrlString]) { return; }
+                
                 WebViewViewController *webViewViewController = [[WebViewViewController alloc] initWithURL:BuildSettings.applicationPrivacyPolicyUrlString];
                 
                 webViewViewController.title = [VectorL10n settingsPrivacyPolicy];

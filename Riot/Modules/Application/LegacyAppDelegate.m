@@ -1100,8 +1100,7 @@ NSString *const AppDelegateUniversalLinkDidChangeNotification = @"AppDelegateUni
         
         MXLogDebug(@"[AppDelegate] Promt user to report crash:\n%@", description);
 
-        // Ask the user to send a crash report
-        [[RageShakeManager sharedManager] promptCrashReportInViewController:self.window.rootViewController];
+        // Coconut: crash reporting is disabled app-wide, do not prompt the user.
     }
 }
 

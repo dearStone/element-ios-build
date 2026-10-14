@@ -196,6 +196,8 @@ final class BuildSettings: NSObject {
     
     
     // MARK: - Bug report
+    /// Coconut: bug reporting (rage shake / crash report) is disabled app-wide.
+    static let bugReportingEnabled: Bool = false
     static let bugReportEndpointUrlString = "https://rageshakes.element.io/api"
     // Use the name allocated by the bug report server
     static let bugReportApplicationId = "riot-ios"
@@ -281,10 +283,10 @@ final class BuildSettings: NSObject {
     static let settingsScreenAllowIdentityServerConfig: Bool = true
     static let settingsScreenShowConfirmMediaSize: Bool = true
     static let settingsScreenShowAdvancedSettings: Bool = true
-    static let settingsScreenShowLabSettings: Bool = true
-    static let settingsScreenAllowChangingRageshakeSettings: Bool = true
-    static let settingsScreenAllowChangingCrashUsageDataSettings: Bool = true
-    static let settingsScreenAllowBugReportingManually: Bool = true
+    static let settingsScreenShowLabSettings: Bool = false
+    static let settingsScreenAllowChangingRageshakeSettings: Bool = false
+    static let settingsScreenAllowChangingCrashUsageDataSettings: Bool = false
+    static let settingsScreenAllowBugReportingManually: Bool = false
     static let settingsScreenAllowDeactivatingAccount: Bool = true
     static let settingsScreenShowChangePassword:Bool = true
     static let settingsScreenShowEnableStunServerFallback: Bool = true

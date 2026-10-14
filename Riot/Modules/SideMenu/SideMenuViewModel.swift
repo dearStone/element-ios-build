@@ -105,9 +105,9 @@ final class SideMenuViewModel: SideMenuViewModelType {
             sideMenuItems += [.inviteFriends]
         }
         
+        // Coconut: the feedback/report problem entry is hidden.
         sideMenuItems += [
-            .settings,
-            .feedback
+            .settings
         ]
         
         // Hide app version

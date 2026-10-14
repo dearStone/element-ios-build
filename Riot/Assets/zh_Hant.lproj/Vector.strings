@@ -908,7 +908,7 @@
 "matrix" = "Matrix";
 // Login Screen
 "login_create_account" = "建立帳號：";
-"login_server_url_placeholder" = "網址（例如 https://matrix.org）";
+"login_server_url_placeholder" = "網址（例如 https://xieqinxian.com）";
 "login_home_server_title" = "家伺服器網址：";
 "login_home_server_info" = "您的家伺服器會儲存所有的對話紀錄跟帳號資料";
 "login_identity_server_title" = "身分伺服器網址：";
@@ -1229,15 +1229,15 @@
 "onboarding_use_case_personal_messaging" = "朋友與家人";
 "onboarding_use_case_message" = "我們將會協助您建立聯繫";
 "onboarding_use_case_title" = "您最常與誰聊天？";
-"onboarding_splash_page_4_message" = "Element 也很適合用在工作場合。許多最重視安全的組織也使用此軟體。";
+"onboarding_splash_page_4_message" = "Coconut 也很適合用在工作場合。許多最重視安全的組織也使用此軟體。";
 "onboarding_splash_page_4_title_no_pun" = "傳訊息給您的團隊。";
 "onboarding_splash_page_3_message" = "端對端加密且無須電話號碼。沒有廣告也不探勘您的個資。";
 "onboarding_splash_page_1_message" = "安全且獨立的通訊，為您提供與在家中進行面對面對話相同的隱私等級。";
 "onboarding_splash_page_3_title" = "安全地傳輸訊息。";
 "onboarding_splash_page_2_message" = "選擇儲存對話的位置，讓您擁有控制權與獨立性。透過 Matrix 連結。";
 "onboarding_splash_page_2_title" = "一切都在您的掌控之中。";
-"onboarding_splash_page_1_title" = "掌握您的對話。";
-"onboarding_splash_login_button_title" = "我已經有帳號了";
+"onboarding_splash_page_1_title" = "Coconut";
+"onboarding_splash_login_button_title" = "登入";
 
 // MARK: Onboarding
 "onboarding_splash_register_button_title" = "建立帳號";

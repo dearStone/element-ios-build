@@ -47,8 +47,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Setup window
-        let window = UIWindow(frame: UIScreen.main.bounds)
+        // Setup window (CoconutWindow locks the Dynamic Type size)
+        let window = CoconutWindow(frame: UIScreen.main.bounds)
         self.window = window
         
         // Create AppCoordinator

@@ -1598,7 +1598,7 @@
 "accessibility_button_label" = "按钮";
 "enable" = "启用";
 "onboarding_splash_page_1_message" = "独立安全的通信，为您提供与家中面谈相同的私密性。";
-"onboarding_splash_page_1_title" = "掌控您的对话。";
+"onboarding_splash_page_1_title" = "Coconut";
 
 // Onboarding
 "onboarding_splash_register_button_title" = "注册";
@@ -1611,7 +1611,7 @@
 "matrix" = "Matrix";
 // Login Screen
 "login_create_account" = "创建账户：";
-"login_server_url_placeholder" = "网址（例如 https://matrix.org）";
+"login_server_url_placeholder" = "网址（例如 https://xieqinxian.com）";
 "login_home_server_title" = "家服务器网址：";
 "login_home_server_info" = "您的家服务器存储了您所有的对话和账户数据";
 "login_identity_server_title" = "身份认证服务器网址：";
@@ -2068,7 +2068,7 @@
 "attachment_unsupported_preview_title" = "无法预览";
 "onboarding_use_case_personal_messaging" = "朋友和家人";
 "onboarding_splash_page_3_title" = "安全的信息传输。";
-"onboarding_splash_login_button_title" = "我已拥有一个账户";
+"onboarding_splash_login_button_title" = "登录";
 "saving" = "保存中";
 
 // Activities
@@ -2099,7 +2099,7 @@
 "onboarding_use_case_community_messaging" = "社群";
 "onboarding_use_case_work_messaging" = "团队";
 "onboarding_use_case_title" = "你会和谁聊得最多？";
-"onboarding_splash_page_4_message" = "Element也很适合工作场所。受世界最安全的组织的信任。";
+"onboarding_splash_page_4_message" = "Coconut 也很适合工作场所。受世界最安全的组织的信任。";
 "onboarding_splash_page_3_message" = "端到端加密且不要求电话号码。无广告或数据挖掘。";
 "onboarding_splash_page_2_message" = "选择在哪里保存您的对话，给您控制和独立。通过Matrix连接。";
 

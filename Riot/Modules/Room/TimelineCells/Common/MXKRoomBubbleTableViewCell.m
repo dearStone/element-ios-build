@@ -953,7 +953,13 @@ static BOOL _disableLongPressGestureOnEvent;
 }
 
 - (BOOL)shouldInteractWithURL:(NSURL *)URL urlItemInteractionValue:(NSNumber*)urlItemInteractionValue associatedEvent:(MXEvent*)associatedEvent
-{    
+{
+    // Coconut: links to the Element/Matrix public ecosystem are silently ignored.
+    if ([CoconutLinkPolicy isBlocked:URL])
+    {
+        return NO;
+    }
+    
     NSMutableDictionary *userInfo = [@{
                                kMXKRoomBubbleCellUrl:URL,
                                kMXKRoomBubbleCellUrlItemInteraction:urlItemInteractionValue

@@ -317,6 +317,8 @@ Please see LICENSE in the repository root for full details.
         [_submitButton setTitle:[VectorL10n login] forState:UIControlStateHighlighted];
         [_authSwitchButton setTitle:[VectorL10n createAccount] forState:UIControlStateNormal];
         [_authSwitchButton setTitle:[VectorL10n createAccount] forState:UIControlStateHighlighted];
+        // Coconut: hide the create account entry point (registration is disabled).
+        _authSwitchButton.hidden = YES;
         
         // Update supported authentication flow and associated information (defined in authentication session)
         [self refreshAuthenticationSession];
@@ -1508,9 +1510,9 @@ Please see LICENSE in the repository root for full details.
     }
     
 #if TARGET_OS_IPHONE
-    NSString *deviceName = [[UIDevice currentDevice].model isEqualToString:@"iPad"] ? [VectorL10n loginTabletDevice] : [VectorL10n loginMobileDevice];
+    NSString *deviceName = @"Coconut iOS";
 #elif TARGET_OS_OSX
-    NSString *deviceName = [VectorL10n loginDesktopDevice];
+    NSString *deviceName = @"Coconut Desktop";
 #endif
     
     return deviceName;
