@@ -1166,8 +1166,17 @@ TableViewSectionsDelegate>
         {
             if ([PinCodePreferences shared].forcePinProtection)
             {
-                cell = [self getDefaultTableViewCell:tableView];
-                cell.textLabel.text = [VectorL10n pinProtectionSettingsEnabledForced];
+                if ([PinCodePreferences shared].isPinSet)
+                {
+                    cell = [self getDefaultTableViewCell:tableView];
+                    cell.textLabel.text = [VectorL10n pinProtectionSettingsEnabledForced];
+                }
+                else
+                {
+                    // Coconut: forced protection without a PIN yet (e.g. in-place update of
+                    // an already logged in session): offer a button so the user can set one.
+                    cell = [self buttonCellWithTitle:[VectorL10n pinProtectionSettingsEnablePin] action:@selector(setPinCode:) forTableView:tableView atIndexPath:indexPath];
+                }
             }
             else
             {
@@ -1515,6 +1524,16 @@ TableViewSectionsDelegate>
 - (void)changePinCode:(UIButton *)sender
 {
     SetPinCoordinatorViewMode viewMode = SetPinCoordinatorViewModeChangePin;
+    self.setPinCoordinatorBridgePresenter = [[SetPinCoordinatorBridgePresenter alloc] initWithSession:self.mainSession viewMode:viewMode];
+    self.setPinCoordinatorBridgePresenter.delegate = self;
+    [self.setPinCoordinatorBridgePresenter presentFrom:self animated:YES];
+}
+
+// Coconut: starts the PIN setup flow from the settings screen when forced protection
+// is enabled but no PIN has been set yet.
+- (void)setPinCode:(UIButton *)sender
+{
+    SetPinCoordinatorViewMode viewMode = SetPinCoordinatorViewModeSetPin;
     self.setPinCoordinatorBridgePresenter = [[SetPinCoordinatorBridgePresenter alloc] initWithSession:self.mainSession viewMode:viewMode];
     self.setPinCoordinatorBridgePresenter.delegate = self;
     [self.setPinCoordinatorBridgePresenter presentFrom:self animated:YES];

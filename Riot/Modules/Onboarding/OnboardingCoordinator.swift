@@ -72,6 +72,10 @@ final class OnboardingCoordinator: NSObject, OnboardingCoordinatorProtocol {
     /// Whether authentication is complete. `true` once authenticated, verified and the app is ready to be shown.
     private var authenticationFinished = false
     
+    // Coconut: forced PIN setup state.
+    private var pinSetupPresenter: SetPinCoordinatorBridgePresenter?
+    private var pendingPostLoginContinuation: (() -> Void)?
+    
     // MARK: Public
 
     // Must be used only internally
@@ -298,6 +302,32 @@ final class OnboardingCoordinator: NSObject, OnboardingCoordinatorProtocol {
                                            didLoginWith session: MXSession,
                                            and authenticationFlow: AuthenticationFlow,
                                            using authenticationType: AuthenticationType) {
+        // Coconut: when PIN protection is forced, the PIN must be set up before the
+        // onboarding flow continues (the new authentication flow does not handle it).
+        if PinCodePreferences.shared.forcePinProtection && !PinCodePreferences.shared.isPinSet {
+            presentForcedPinSetup(for: session, authenticationFlow: authenticationFlow, authenticationType: authenticationType)
+            return
+        }
+        
+        continueOnboardingAfterLogin(with: session, authenticationFlow: authenticationFlow, authenticationType: authenticationType)
+    }
+    
+    /// Coconut: presents the forced PIN setup and resumes the onboarding flow once it is completed.
+    private func presentForcedPinSetup(for session: MXSession, authenticationFlow: AuthenticationFlow, authenticationType: AuthenticationType) {
+        MXLog.debug("[OnboardingCoordinator] presentForcedPinSetup")
+        
+        let viewMode: SetPinCoordinatorViewMode = authenticationFlow == .register ? .setPinAfterRegister : .setPinAfterLogin
+        let presenter = SetPinCoordinatorBridgePresenter(session: session, viewMode: viewMode)
+        presenter.delegate = self
+        self.pinSetupPresenter = presenter
+        self.pendingPostLoginContinuation = { [weak self] in
+            self?.continueOnboardingAfterLogin(with: session, authenticationFlow: authenticationFlow, authenticationType: authenticationType)
+        }
+        presenter.present(from: navigationRouter.toPresentable(), animated: true)
+    }
+    
+    /// Coconut: runs the remaining post-login onboarding steps.
+    private func continueOnboardingAfterLogin(with session: MXSession, authenticationFlow: AuthenticationFlow, authenticationType: AuthenticationType) {
         self.session = session
         self.authenticationFlow = authenticationFlow
         self.authenticationType = authenticationType
@@ -641,5 +671,29 @@ extension OnboardingUseCaseViewModelResult {
         case .skipped:
             return .skipped
         }
+    }
+}
+
+// MARK: - Coconut: forced PIN setup
+
+extension OnboardingCoordinator: SetPinCoordinatorBridgePresenterDelegate {
+    
+    func setPinCoordinatorBridgePresenterDelegateDidComplete(_ coordinatorBridgePresenter: SetPinCoordinatorBridgePresenter) {
+        self.pinSetupPresenter = nil
+        
+        let continuation = pendingPostLoginContinuation
+        pendingPostLoginContinuation = nil
+        continuation?()
+    }
+    
+    func setPinCoordinatorBridgePresenterDelegateDidCancel(_ coordinatorBridgePresenter: SetPinCoordinatorBridgePresenter) {
+        // Coconut: the cancel button is hidden while protection is forced; should the flow
+        // be dismissed anyway, keep going rather than leaving the user stuck.
+        self.setPinCoordinatorBridgePresenterDelegateDidComplete(coordinatorBridgePresenter)
+    }
+    
+    func setPinCoordinatorBridgePresenterDelegateDidCompleteWithReset(_ coordinatorBridgePresenter: SetPinCoordinatorBridgePresenter, dueToTooManyErrors: Bool) {
+        // Coconut: not expected during the setup flow, but resume onboarding regardless.
+        self.setPinCoordinatorBridgePresenterDelegateDidComplete(coordinatorBridgePresenter)
     }
 }
